@@ -31,7 +31,47 @@ class ServerController {
             res.status(500).send();
         }
     }
-
+// Crear usuario
+    async createUser(req, res) {
+        try {
+            const newUser = new person(req.body);
+            const savedUser = await newUser.save();
+            res.status(201).json(savedUser);
+        } catch (error) {
+            console.error("Error al crear usuario:", error);
+            res.status(500).send();
+        }
+    }
+    // Actualizar usuario por ID
+    async updateUser(req, res) {
+        try {
+            const id = req.params.id;
+            const updatedUser = await person.findByIdAndUpdate(id, req.body, { new: true });
+            if (updatedUser) {
+                res.status(200).json(updatedUser);
+            } else {
+                res.status(404).send();
+            }
+        } catch (error) {
+            console.error(`Error al actualizar usuario con ID ${req.params.id}:`, error);
+            res.status(500).send();
+        }
+    }
+     // Eliminar usuario por ID
+    async deleteUser(req, res) {
+        try {
+            const id = req.params.id;
+            const deletedUser = await person.findByIdAndDelete(id);
+            if (deletedUser) {
+                res.status(200).json({ mensaje: "Usuario eliminado correctamente" });
+            } else {
+                res.status(404).send();
+            }
+        } catch (error) {
+            console.error(`Error al eliminar usuario con ID ${req.params.id}:`, error);
+            res.status(500).send();
+        }
+    }
 }
 
 exports.default = ServerController;
