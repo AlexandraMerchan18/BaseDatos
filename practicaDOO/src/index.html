@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Personas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f4f4f4; }
+        h1 { color: #333; }
+        form { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 2px 8px #ccc; }
+        label { display: block; margin-top: 10px; }
+        input[type="text"], input[type="number"], input[type="email"] {
+            width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #ccc; border-radius: 4px;
+        }
+        button { margin-top: 15px; padding: 10px 20px; background: #007bff; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        table { width: 100%; border-collapse: collapse; background: #fff; }
+        th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
+        th { background: #007bff; color: #fff; }
+    </style>
+</head>
+<body>
+    <h1>Gestión de Personas</h1>
+    <form id="personForm">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required>
+
+        <label for="apellido">Apellido:</label>
+        <input type="text" id="apellido" name="apellido" required>
+
+        <label for="edad">Edad:</label>
+        <input type="number" id="edad" name="edad" required min="0">
+
+        <label for="email">Correo electrónico:</label>
+        <input type="email" id="email" name="email" required>
+
+        <button type="submit">Agregar Persona</button>
+    </form>
+
+    <h2>Lista de Personas</h2>
+    <table id="personTable">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Edad</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Las personas se cargarán aquí -->
+        </tbody>
+    </table>
+
+    <script>
+    async function fetchPersons() {
+        const res = await fetch('http://localhost:3000/api/personas');
+        const personas = await res.json();
+        const tbody = document.querySelector('#personTable tbody');
+        tbody.innerHTML = '';
+        personas.forEach(persona => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${persona.nombre}</td>
+                <td>${persona.apellido}</td>
+                <td>${persona.edad}</td>
+                <td>${persona.email}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    document.getElementById('personForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const data = {
+            nombre: this.nombre.value,
+            apellido: this.apellido.value,
+            edad: this.edad.value,
+            email: this.email.value
+        };
+        await fetch('http://localhost:3000/api/personas', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        this.reset();
+        fetchPersons();
+    });
+
+    window.onload = fetchPersons;
+</script>
+</body>
+</html>
