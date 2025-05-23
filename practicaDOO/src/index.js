@@ -28,7 +28,7 @@ class Server {
         // Rutas CRUD de personas
         this.app.use('/api', personRouter);
 
-        // Otras rutas (si las tienes)
+        // Otras rutas de la API
         const serverR = new serverRouter.default();
         this.app.use(serverR.router);
 
