@@ -59,19 +59,18 @@
         const personas = await res.json();
         const tbody = document.querySelector('#personTable tbody');
         tbody.innerHTML = '';
+        
         personas.forEach(persona => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${persona.nombre}</td>
-                <td>${persona.apellido}</td>
-                <td>${persona.edad}</td>
-                <td>${persona.email}</td>
-                <td>
-            <button onclick="deletePersona('${persona._id}')">Eliminar</button>
-           </td>
-            `;
-            tbody.appendChild(tr);
-        });
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td>${persona.nombre}</td>
+        <td>${persona.apellido}</td>
+        <td>${persona.edad}</td>
+        <td>${persona.email}</td>
+        <td><button onclick="deletePersona('${persona._id}')">Eliminar</button></td>
+    `;
+    tbody.appendChild(tr);
+});
     }
 
     document.getElementById('personForm').addEventListener('submit', async function(e) {
