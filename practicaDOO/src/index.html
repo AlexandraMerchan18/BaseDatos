@@ -45,7 +45,7 @@
                 <th>Apellido</th>
                 <th>Edad</th>
                 <th>Email</th>
-                <th>Acciones</th> 
+                <th>Acciones</th> <!-- Agrega la columna Acciones -->
             </tr>
         </thead>
         <tbody>
@@ -54,50 +54,49 @@
     </table>
 
     <script>
-    async function fetchPersons() {
-        const res = await fetch('http://localhost:3000/api/personas');
-        const personas = await res.json();
-        const tbody = document.querySelector('#personTable tbody');
-        tbody.innerHTML = '';
-        
-        personas.forEach(persona => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-        <td>${persona.nombre}</td>
-        <td>${persona.apellido}</td>
-        <td>${persona.edad}</td>
-        <td>${persona.email}</td>
-        <td><button onclick="deletePersona('${persona._id}')">Eliminar</button></td>
-    `;
-    tbody.appendChild(tr);
-});
-    }
+        async function fetchPersons() {
+            const res = await fetch('/api/personas');
+            const personas = await res.json();
+            const tbody = document.querySelector('#personTable tbody');
+            tbody.innerHTML = '';
+            personas.forEach(persona => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${persona.nombre}</td>
+                    <td>${persona.apellido}</td>
+                    <td>${persona.edad}</td>
+                    <td>${persona.email}</td>
+                    <td><button onclick="deletePersona('${persona._id}')">Eliminar</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
 
-    document.getElementById('personForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const data = {
-            nombre: this.nombre.value,
-            apellido: this.apellido.value,
-            edad: this.edad.value,
-            email: this.email.value
-        };
-        await fetch('http://localhost:3000/api/personas', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+        document.getElementById('personForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const data = {
+                nombre: this.nombre.value,
+                apellido: this.apellido.value,
+                edad: this.edad.value,
+                email: this.email.value
+            };
+            await fetch('/api/personas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            this.reset();
+            fetchPersons();
         });
-        this.reset();
-        fetchPersons();
-    });
 
-    async function deletePersona(id) {
-    if (confirm('¿Seguro que deseas eliminar esta persona?')) {
-        await fetch(`http://localhost:3000/api/personas/${id}`, { method: 'DELETE' });
-        fetchPersons();
-    }
-}
+        async function deletePersona(id) {
+            if (confirm('¿Seguro que deseas eliminar esta persona?')) {
+                await fetch(`/api/personas/${id}`, { method: 'DELETE' });
+                fetchPersons();
+            }
+        }
 
-    window.onload = fetchPersons;
-</script>
+        window.onload = fetchPersons;
+    </script>
 </body>
 </html>
